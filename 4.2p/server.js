@@ -75,7 +75,28 @@ Card.countDocuments().then(count => {
 // API endpoint to retrieve cards from the database
 app.get('/api/cards', async (req, res) => {
   const cards = await Card.find({});
-  res.json(cards);
+  res.json({ statusCode: 200, data: cards , message: "Cards retrieved successfully"});
+});
+
+// API endpoint to add a new card to the database
+app.post('/api/cards', async (req, res) => {
+  try {
+    // Only keep fields we expect
+    const { title, image, link, description } = req.body;
+    const card = new Card({ title, image, link, description });
+    // Schema validation
+    await card.save();  
+    res.status(201).json({
+      statusCode: 201,
+      data: card,
+      message: "Card created successfully"
+    });
+  } catch (err) {
+    res.status(400).json({
+      statusCode: 400,
+      message: err.message
+    });
+  }
 });
 
 app.listen(port, () => {

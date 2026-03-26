@@ -26,9 +26,9 @@ const createCard = (card) => {
 
 $(document).ready(function(){
   // Fetch and render cards
-  $.get('/api/cards', function (cards) {
+  $.get('/api/cards', function (response) {
     const container = $('#cards-container');
-    cards.forEach(card => {
+    response.data.forEach(card => {
       container.append(createCard(card));
     });
   });
