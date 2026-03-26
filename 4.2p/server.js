@@ -1,13 +1,11 @@
-var express = require("express");
-var app = express();
-var port = process.env.port || 3000;
+// Define the server and its dependencies
+const express = require("express");
+const mongoose = require("mongoose");
+const app = express();
+const port = process.env.port || 3000;
 
-app.use(express.static(__dirname + '/public'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.get('/api/cards', (req, res) => {
-  const cards = [
+// Sample card data to be served by the API
+const sample_cards = [
     {
       title: "Porsche",
       image: "img/porsche.jpg",
@@ -26,7 +24,57 @@ app.get('/api/cards', (req, res) => {
       link: "https://www.mercedes-benz.com.au/",
       description: "Mercedes-Benz is a German luxury automotive brand known for their innovation, comfort and cutting-edge technology. Founded in 1926 and headquartered in Stuttgart, Germany, Mercedes-Benz is one of the oldest and most storied automobile manufacturers in the world. The brand offers an extensive lineup of luxury sedans, SUVs, coupes, convertibles and electric vehicles under its EQ sub-brand. Mercedes-Benz has a proud motorsport heritage, particularly in Formula 1, where it has dominated the sport in recent decades. The brand is synonymous with sophistication, safety innovation and engineering excellence, consistently setting the benchmark for luxury vehicles worldwide. The AMG performance division, founded in 1967, produces some of the most powerful and exclusive road cars available, including the iconic AMG GT and the hyper-exclusive AMG One hypercar which uses a Formula 1 derived powertrain. Mercedes-Benz has been at the forefront of automotive safety innovation for decades, pioneering technologies such as the crumple zone, ABS braking, electronic stability control and a wide range of advanced driver assistance systems. With a bold vision for the future, Mercedes-Benz is investing heavily in electric mobility, autonomous driving technology and sustainable manufacturing, ensuring the brand remains at the pinnacle of the automotive world for generations to come."
     }
-  ];
+];
+
+// Middleware to serve static files and parse JSON and URL-encoded data
+app.use(express.static(__dirname + '/public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/myapp');
+mongoose.connection.on('connected', () => {
+  console.log('Connected to MongoDB');
+});
+
+// Define the Card schema for MongoDB
+const CardSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    maxlength: 512
+  },
+  image: {
+    type: String,
+    required: true,
+    maxlength: 512
+  },
+  link: {
+    type: String,
+    required: true,
+    maxlength: 512
+  },
+  description: {
+    type: String,
+    required: true,
+    minlength: 128,
+    maxlength: 2048
+  }
+});
+
+// Insert sample data if the collection is empty
+const Card = mongoose.model('Card', CardSchema);
+Card.countDocuments().then(count => {
+  if (count === 0) {
+    Card.insertMany(sample_cards)
+      .then(() => console.log("Sample data inserted"))
+      .catch(err => console.error(err));
+  }
+});
+
+// API endpoint to retrieve cards from the database
+app.get('/api/cards', async (req, res) => {
+  const cards = await Card.find({});
   res.json(cards);
 });
 
