@@ -1,0 +1,9 @@
+/* Make navbar black */
+nav {
+  background-color: black !important;
+}
+
+/* Pad the brand logo to the right */
+.brand-logo {
+  padding-left: 20px !important;
+}
