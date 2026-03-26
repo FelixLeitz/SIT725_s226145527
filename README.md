@@ -23,6 +23,7 @@ cd task-name
 ### 3. Install Dependencies
 
 npm install express
+npm install mongoose
 
 ### 4. Run the App
 
