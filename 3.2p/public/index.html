@@ -36,8 +36,40 @@
             <div class="row" id="cards-container">
                 <!-- Cards will be dynamically injected here -->
             </div>
+
+            <!-- Modal Trigger -->
+            <div class="col s12 center-align">
+                <a class="waves-effect waves-light btn click-me-button modal-trigger" href="#registerModal">
+                    <i class="material-icons left">person_add</i>Register
+                </a>
+            </div>
         </div>
     </main>
+
+    <!-- Registration Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h4>Register</h4>
+            <div class="input-field">
+                <input id="username" type="text" class="validate">
+                <label for="username">Username</label>
+            </div>
+
+            <div class="input-field">
+                <input id="email" type="email" class="validate">
+                <label for="email">Email</label>
+            </div>
+
+            <div class="input-field">
+                <input id="password" type="password" class="validate">
+                <label for="password">Password</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect btn click-me-button">Close</a>
+            <a href="#!" class="waves-effect btn click-me-button" id="submitRegister">Submit</a>
+        </div>
+    </div>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

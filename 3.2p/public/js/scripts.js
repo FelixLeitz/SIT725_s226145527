@@ -25,11 +25,22 @@ const createCard = (card) => {
 };
 
 $(document).ready(function(){
+  // Initialize modal
+  $('.modal').modal(); 
+
   // Fetch and render cards
   $.get('/api/cards', function (cards) {
     const container = $('#cards-container');
     cards.forEach(card => {
       container.append(createCard(card));
     });
+  });
+
+  // Form submission logic
+  $('#submitRegister').click(() => {
+    const username = $('#username').val();
+    const email = $('#email').val();
+    const password = $('#password').val();
+    console.log({ username, email, password });
   });
 });
