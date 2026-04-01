@@ -12,3 +12,23 @@ exports.getAllBooks = (_req, res, next) => {
         next(error);
     }
 };
+
+exports.getBookById = (req, res, next) => {
+    try {
+        const bookId = req.params.id;
+        const book = bookService.getBookById(bookId);
+        if (!book) {
+            return res.status(404).json({
+                statusCode: 404,
+                message: 'Book not found'
+            });
+        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'Book retrieved successfully',
+            data: book
+        });
+    } catch (error) {
+        next(error);
+    }
+};

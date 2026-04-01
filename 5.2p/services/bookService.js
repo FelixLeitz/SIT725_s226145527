@@ -45,4 +45,8 @@ function getAllBooks() {
     return books;
 }
 
-module.exports = { getAllBooks };
+function getBookById(id) {
+    return books.find(b => b.id === id);
+}
+
+module.exports = { getAllBooks, getBookById };
