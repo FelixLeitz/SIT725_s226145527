@@ -16,6 +16,8 @@ function render(items) {
         details.textContent = `${it.title} by ${it.author} (${it.year}) - ${it.genre}`;
 
         summary.textContent = it.summary;
+        summary.style.fontStyle = 'italic';
+        summary.style.marginLeft = '20px';
         
         out.appendChild(details);
         out.appendChild(summary);
