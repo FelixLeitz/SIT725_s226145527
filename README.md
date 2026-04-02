@@ -31,6 +31,10 @@ npm run start
 
 The app will be running at **http://localhost:3000** by default.
 
+npm run start:seed
+
+Note: Applications that include seeding should include functionality combining starting and seeding. 
+
 ## Configuration
 
 PORT=3000
