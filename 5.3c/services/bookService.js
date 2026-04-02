@@ -6,7 +6,7 @@ async function getAllBooks() {
 }
 
 async function getBookById(id) {
-    const book = await bookItems.findById(id);
+    const book = await bookItems.findOne({ id });
     return book ? book.toJSON() : null;
 }
 
