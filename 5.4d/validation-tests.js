@@ -353,7 +353,7 @@ async function run() {
     path: createPath,
     expected: 201,
     body: { ...makeValidBook(`b${Date.now() + 13}`), year: new Date().getFullYear() },
-    tags: []
+    tags: ["BOUNDARY", "TEMPORAL"]
   });
 
   // ---- T18 Boundary - price zero ----
@@ -410,7 +410,7 @@ async function run() {
     path: createPath,
     expected: 201,
     body: { ...makeValidBook(`b${Date.now() + 18}`), summary: "a".repeat(20) },
-    tags: []
+    tags: ["LENGTH"]
   });
 
   // ---- T23 Length - summary exactly at max boundary ----
@@ -421,7 +421,7 @@ async function run() {
     path: createPath,
     expected: 201,
     body: { ...makeValidBook(`b${Date.now() + 19}`), summary: "a".repeat(4096) },
-    tags: []
+    tags: ["LENGTH"]
   });
 
   // ---- T24 Length - title empty ----
