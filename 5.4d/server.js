@@ -23,6 +23,14 @@ app.use('/api/books', bookRoutes);
 
 // Error handling middleware (after all routes)
 app.use((err, req, res, next) => {
+    // Strict mode unknown fields → 400
+    if (err.name === 'StrictModeError') {
+        return res.status(400).json({
+            statusCode: 400,
+            message: `Unknown field: ${err.message}`
+        });
+    }
+
     // Mongoose schema validation → 400
     if (err.name === 'ValidationError') {
         return res.status(400).json({

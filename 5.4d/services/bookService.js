@@ -34,6 +34,13 @@ async function createBook(bookData) {
 }
 
 async function updateBook(id, bookData) {
+    // Reject id changes with 400
+    if (bookData.id) {
+        const error = new Error('ID is immutable and cannot be changed');
+        error.statusCode = 400;
+        throw error;
+    }
+
     const updatedBook = await bookItems.findOneAndUpdate({ id }, bookData, { runValidators: true });
     
     if (!updatedBook) {
