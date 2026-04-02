@@ -1,7 +1,7 @@
 const btn = document.querySelector('#fetchBooksBtn');
 const out = document.querySelector('#booksDisplay');
 
-function render(items) {
+function renderBooks(items) {
     console.log('Rendering items:', items);
     out.innerHTML = '';
     if (!Array.isArray(items) || items.length === 0) {
@@ -9,18 +9,13 @@ function render(items) {
         return;
     }
     for (const it of items) {
-        // Create elements for book details and summary
+        // Create elements for book details
         const details = document.createElement('p');
-        const summary = document.createElement('p');
+        const price = it.price?.$numberDecimal ?? it.price ?? '';
 
-        details.textContent = `${it.title} by ${it.author} (${it.year}) - ${it.genre}`;
+        details.textContent = `${it.title} ${price} ${it.currency}`;
 
-        summary.textContent = it.summary;
-        summary.style.fontStyle = 'italic';
-        summary.style.marginLeft = '20px';
-        
         out.appendChild(details);
-        out.appendChild(summary);
     }
 }
 
@@ -34,7 +29,7 @@ btn.addEventListener('click', () => {
         })
         .then(json => {
             console.log('JSON parsed:', json);
-            render(json.data);
+            renderBooks(json.data);
         })
         .catch(err => {
             console.error('Error fetching books:', err);

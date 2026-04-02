@@ -1,9 +1,15 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const path = require('path');
 const bookRoutes = require('./routes/bookRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/bookDB')
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((error) => console.error('Error connecting to MongoDB:', error));
 
 // Middleware
 app.use(express.json());                      

@@ -1,8 +1,8 @@
 const bookService = require('../services/bookService');
 
-exports.getAllBooks = (_req, res, next) => {
+exports.getAllBooks = async (_req, res, next) => {
     try {
-        const books = bookService.getAllBooks();
+        const books = await bookService.getAllBooks();
         res.status(200).json({
             statusCode: 200,
             message: 'Books retrieved successfully',
@@ -13,10 +13,10 @@ exports.getAllBooks = (_req, res, next) => {
     }
 };
 
-exports.getBookById = (req, res, next) => {
+exports.getBookById = async (req, res, next) => {
     try {
         const bookId = req.params.id;
-        const book = bookService.getBookById(bookId);
+        const book = await bookService.getBookById(bookId);
         if (!book) {
             return res.status(404).json({
                 statusCode: 404,
