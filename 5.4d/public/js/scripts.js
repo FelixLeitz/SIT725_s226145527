@@ -25,7 +25,7 @@ function renderBooks(items) {
 }
 
 function handleBookClick(book) {
-    fetch(`/api/books/${book._id}`)
+    fetch(`/api/books/${book.id}`)
         .then(res => {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return res.json();
