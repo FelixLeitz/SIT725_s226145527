@@ -55,7 +55,6 @@ button:hover {
     transform: translateX(4px);
 }
 
-/* ===== Book Details ===== */
 #bookDetails {
     background-color: #f8f9fa;
     border-radius: 10px;
@@ -64,4 +63,7 @@ button:hover {
     margin: 20px auto;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     line-height: 1.8;
+    word-break: break-word;  
+    overflow-wrap: break-word; 
 }
+

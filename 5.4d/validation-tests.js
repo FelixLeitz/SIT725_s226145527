@@ -129,8 +129,8 @@ function makeValidBook(id) {
     author: "Valid Author",
     year: 2020,
     genre: "Other",
-    summary: "Valid summary text that satisfies your rules.",
-    price: 9.99,
+    summary: "Valid summary text that satisfies the rules.",
+    price: "9.99",
     currency: "AUD"
   };
 }
@@ -141,8 +141,8 @@ function makeValidUpdate() {
     author: "Updated Author",
     year: 2021,
     genre: "Other",
-    summary: "Updated summary text.",
-    price: 10.50,
+    summary: "Updated summary text that satisfies the rules.",
+    price: "10.50",
     currency: "AUD"
   };
 }
@@ -199,7 +199,7 @@ async function run() {
     method: "POST",
     path: createPath,
     expected: 400,
-    body: { ...makeValidBook(`b${Date.now()+1}`), hack: true },
+    body: { ...makeValidBook(`b${Date.now() + 1}`), hack: true },
     tags: ["CREATE_FAIL", "UNKNOWN_CREATE"]
   });
 
@@ -214,24 +214,337 @@ async function run() {
     tags: ["UPDATE_FAIL", "UNKNOWN_UPDATE"]
   });
 
-  // =====================================
-  // STUDENTS MUST ADD ADDITIONAL TESTS
-  // =====================================
-  //
-  // Add tests covering:
-  // - REQUIRED
-  // - TYPE
-  // - BOUNDARY
-  // - LENGTH
-  // - TEMPORAL
-  // - UPDATE_FAIL
-  //
-  // Each test must include appropriate tags.
-  //
+  // =============================
+  // ADDITIONAL TESTS
+  // =============================
 
+  // ---- MISSING REQUIRED FIELDS ----
+
+  // ---- T06 Missing required field - title ----
+  await test({
+    id: "T06",
+    name: "Missing required field - title",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 2}`), title: undefined },
+    tags: ["CREATE_FAIL", "REQUIRED"]
+  });
+
+  // ---- T07 Missing required field - author ----
+  await test({
+    id: "T07",
+    name: "Missing required field - author",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 3}`), author: undefined },
+    tags: ["CREATE_FAIL", "REQUIRED"]
+  });
+
+  // ---- T08 Missing required field - year ----
+  await test({
+    id: "T08",
+    name: "Missing required field - year",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 4}`), year: undefined },
+    tags: ["CREATE_FAIL", "REQUIRED"]
+  });
+
+  // ---- T09 Missing required field - genre ----
+  await test({
+    id: "T09",
+    name: "Missing required field - genre",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 5}`), genre: undefined },
+    tags: ["CREATE_FAIL", "REQUIRED"]
+  });
+
+  // ---- T10 Missing required field - price ----
+  await test({
+    id: "T10",
+    name: "Missing required field - price",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 6}`), price: undefined },
+    tags: ["CREATE_FAIL", "REQUIRED"]
+  });
+
+  // ---- T11 Missing required field - currency ----
+  await test({
+    id: "T11",
+    name: "Missing required field - currency",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 7}`), currency: undefined },
+    tags: ["CREATE_FAIL", "REQUIRED"]
+  });
+
+  // ---- WRONG TYPE ----
+
+  // ---- T12 Wrong type - year as string ----
+  await test({
+    id: "T12",
+    name: "Wrong type - year as string",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 8}`), year: "not a year" },
+    tags: ["CREATE_FAIL", "TYPE"]
+  });
+
+  // ---- T13 Wrong type - price as non-numeric string ----
+  await test({
+    id: "T13",
+    name: "Wrong type - price as non-numeric string",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 9}`), price: "abc" },
+    tags: ["CREATE_FAIL", "TYPE"]
+  });
+
+  // ---- T14 Wrong type - invalid currency ----
+  await test({
+    id: "T14",
+    name: "Wrong type - invalid currency not in enum",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 10}`), currency: "NZD" },
+    tags: ["CREATE_FAIL", "TYPE"]
+  });
+
+  // ---- BOUNDARY ----
+
+  // ---- T15 Boundary - year in future ----
+  await test({
+    id: "T15",
+    name: "Boundary - year in future",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 11}`), year: new Date().getFullYear() + 1 },
+    tags: ["CREATE_FAIL", "BOUNDARY", "TEMPORAL"]
+  });
+
+  // ---- T16 Boundary - year negative ----
+  await test({
+    id: "T16",
+    name: "Boundary - year negative",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 12}`), year: -1 },
+    tags: ["CREATE_FAIL", "BOUNDARY", "TEMPORAL"]
+  });
+
+  // ---- T17 Boundary - current year valid ----
+  await test({
+    id: "T17",
+    name: "Boundary - current year is valid",
+    method: "POST",
+    path: createPath,
+    expected: 201,
+    body: { ...makeValidBook(`b${Date.now() + 13}`), year: new Date().getFullYear() },
+    tags: []
+  });
+
+  // ---- T18 Boundary - price zero ----
+  await test({
+    id: "T18",
+    name: "Boundary - price zero",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 14}`), price: "0" },
+    tags: ["CREATE_FAIL", "BOUNDARY"]
+  });
+
+  // ---- T19 Boundary - price negative ----
+  await test({
+    id: "T19",
+    name: "Boundary - price negative",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 15}`), price: "-1" },
+    tags: ["CREATE_FAIL", "BOUNDARY"]
+  });
+
+  // ---- LENGTH ----
+
+  // ---- T20 Length - summary too short ----
+  await test({
+    id: "T20",
+    name: "Length - summary too short",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 16}`), summary: "too short" },
+    tags: ["CREATE_FAIL", "LENGTH"]
+  });
+
+  // ---- T21 Length - summary too long ----
+  await test({
+    id: "T21",
+    name: "Length - summary too long",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 17}`), summary: "a".repeat(4097) },
+    tags: ["CREATE_FAIL", "LENGTH"]
+  });
+
+  // ---- T22 Length - summary exactly at min boundary ----
+  await test({
+    id: "T22",
+    name: "Length - summary exactly 20 chars",
+    method: "POST",
+    path: createPath,
+    expected: 201,
+    body: { ...makeValidBook(`b${Date.now() + 18}`), summary: "a".repeat(20) },
+    tags: []
+  });
+
+  // ---- T23 Length - summary exactly at max boundary ----
+  await test({
+    id: "T23",
+    name: "Length - summary exactly 4096 chars",
+    method: "POST",
+    path: createPath,
+    expected: 201,
+    body: { ...makeValidBook(`b${Date.now() + 19}`), summary: "a".repeat(4096) },
+    tags: []
+  });
+
+  // ---- T24 Length - title empty ----
+  await test({
+    id: "T24",
+    name: "Length - title empty string",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 20}`), title: "" },
+    tags: ["CREATE_FAIL", "LENGTH"]
+  });
+
+  // ---- T25 Length - title too long ----
+  await test({
+    id: "T25",
+    name: "Length - title too long",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 21}`), title: "a".repeat(1025) },
+    tags: ["CREATE_FAIL", "LENGTH"]
+  });
+
+  // ---- ID FORMAT ----
+
+  // ---- T26 ID format - uppercase B ----
+  await test({
+    id: "T26",
+    name: "ID format - uppercase B rejected",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 22}`), id: "B1" },
+    tags: ["CREATE_FAIL", "TYPE"]
+  });
+
+  // ---- T27 ID format - no digits ----
+  await test({
+    id: "T27",
+    name: "ID format - no digits rejected",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 23}`), id: "b" },
+    tags: ["CREATE_FAIL", "TYPE"]
+  });
+
+  // ---- T28 ID format - wrong order ----
+  await test({
+    id: "T28",
+    name: "ID format - digits before b rejected",
+    method: "POST",
+    path: createPath,
+    expected: 400,
+    body: { ...makeValidBook(`b${Date.now() + 24}`), id: "1b" },
+    tags: ["CREATE_FAIL", "TYPE"]
+  });
+
+  // ---- UPDATE FAIL ----
+
+  // ---- T29 Update fail - book not found ----
+  await test({
+    id: "T29",
+    name: "Update fail - book not found",
+    method: "PUT",
+    path: updatePath("b99999"),
+    expected: 404,
+    body: makeValidUpdate(),
+    tags: ["UPDATE_FAIL"]
+  });
+
+  // ---- T30 Update fail - year in future ----
+  await test({
+    id: "T30",
+    name: "Update fail - year in future",
+    method: "PUT",
+    path: updatePath(uniqueId),
+    expected: 400,
+    body: { ...makeValidUpdate(), year: new Date().getFullYear() + 1 },
+    tags: ["UPDATE_FAIL", "BOUNDARY", "TEMPORAL"]
+  });
+
+  // ---- T31 Update fail - summary too short ----
+  await test({
+    id: "T31",
+    name: "Update fail - summary too short",
+    method: "PUT",
+    path: updatePath(uniqueId),
+    expected: 400,
+    body: { ...makeValidUpdate(), summary: "too short" },
+    tags: ["UPDATE_FAIL", "LENGTH"]
+  });
+
+  // ---- T32 Update fail - year as string ----
+  await test({
+    id: "T32",
+    name: "Update fail - year as string",
+    method: "PUT",
+    path: updatePath(uniqueId),
+    expected: 400,
+    body: { ...makeValidUpdate(), year: "not a year" },
+    tags: ["UPDATE_FAIL", "TYPE"]
+  });
+
+  // ---- PARTIAL UPDATE ----
+
+  // ---- T33 Partial update - only author ----
+  await test({
+    id: "T33",
+    name: "Partial update - only author",
+    method: "PUT",
+    path: updatePath(uniqueId),
+    expected: 200,
+    body: { author: "Only Author Updated" },
+    tags: []
+  });
+
+  // Print summary and coverage
   const pass = logSummary();
   logCoverage();
 
+  // Exit with code 0 if all tests passed, 1 if any failed
   process.exit(pass ? 0 : 1);
 }
 

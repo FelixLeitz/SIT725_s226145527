@@ -23,6 +23,14 @@ app.use('/api/books', bookRoutes);
 
 // Error handling middleware (after all routes)
 app.use((err, req, res, next) => {
+    // Mongoose type casting failure → 400
+    if (err.name === 'CastError') {
+        return res.status(400).json({
+            statusCode: 400,
+            message: `Invalid value for field '${err.path}': ${err.value}`
+        });
+    }
+
     // Strict mode unknown fields → 400
     if (err.name === 'StrictModeError') {
         return res.status(400).json({

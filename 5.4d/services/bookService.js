@@ -15,21 +15,17 @@ async function getAllBooks() {
 
 async function getBookById(id) {
     const book = await bookItems.findOne({ id });
-    
-    // If book not found, throw an error with 404 status code
-    if (!book) {
-        const error = new Error(`Book with id ${id} not found`);
-        error.statusCode = 404;
-        throw error;
-    }
 
     return book.toJSON();
 }
 
 async function createBook(bookData) {
     const newBook = new bookItems(bookData);
-    // Save the new book to the database (this will also trigger validation and throw errors up the chain if the data is invalid)
+    
+    // Validate and save the new book to the database
     await newBook.save();
+
+    // Return the created book as JSON
     return newBook.toJSON();
 }
 
@@ -41,7 +37,13 @@ async function updateBook(id, bookData) {
         throw error;
     }
 
-    const updatedBook = await bookItems.findOneAndUpdate({ id }, bookData, { runValidators: true });
+    const updatedBook = await bookItems.findOneAndUpdate(
+        { id }, bookData, { 
+            returnDocument: 'after', // return the updated document
+            runValidators: true, // ensure validators run on update
+            context: 'query' // needed for some validators to work properly during update operations
+        }
+    );
     
     if (!updatedBook) {
         const error = new Error(`Book with id ${id} not found`);
