@@ -29,6 +29,7 @@ cd task-name
 ```bash
 npm install express # Express application 
 npm install mongoose # Database
+npm install –save-dev mocha chai request # Testing suite
 ```
 
 ### 4. Run the App
