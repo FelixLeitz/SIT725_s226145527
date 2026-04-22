@@ -10,7 +10,21 @@
   <div class="header-container">
     <h1>Socket Application by s226145527</h1>
   </div>
-  
+
+  <!-- Stats Display -->
+  <div id="statsDisplay">
+    <p>Total Connections: <span id="totalConnections">0</span></p>
+    <p>Total Disconnections: <span id="totalDisconnections">0</span></p>
+    
+    <!-- Currently connected with blinking dot -->
+    <div class="connected-row">
+      Currently Connected:
+      <span class="value" id="currentlyConnected">0</span>
+      <span class="blink-dot"></span>
+    </div>
+  </div>
+
+  <!-- Word-by-word message display -->
   <div id="textDisplay"></div>
 
   <!-- Socket.IO Client -->
